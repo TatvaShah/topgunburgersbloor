@@ -1,0 +1,330 @@
+@import "tailwindcss";
+
+/* Colors, fonts and radii come from site.config.ts through CSS variables set on <html>. */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-ink: var(--c-ink);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-accent: var(--c-accent);
+  --color-accent-ink: var(--c-accent-ink);
+  --color-soft: var(--c-soft);
+  --color-line: var(--c-line);
+  --font-display: var(--f-display), Georgia, serif;
+  --font-sans: var(--f-body), system-ui, sans-serif;
+  --font-script: var(--f-script), cursive;
+  --font-wordmark: var(--f-wordmark), Georgia, serif;
+  --radius-card: var(--r-card);
+  --radius-pill: var(--r-pill);
+  --radius-media: var(--r-media);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+/* Lenis takes over scrolling on desktop; it needs native smooth scrolling off. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+html.lenis {
+  scroll-behavior: auto;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  color: var(--c-ink);
+  text-transform: var(--h-case, none);
+  letter-spacing: var(--h-track, normal);
+}
+
+.wordmark {
+  font-family: var(--font-wordmark);
+}
+
+/* Menu tabs: sideways scroll, sticky under the header on small screens */
+.menu-tabbar {
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+.menu-tabbar::-webkit-scrollbar {
+  display: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--c-soft);
+  color: var(--c-ink);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--r-pill);
+  padding: 0.85rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+}
+.btn-primary {
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+}
+.btn-ghost {
+  border: 1px solid var(--c-line);
+  background: var(--c-surface);
+  color: var(--c-ink);
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+/* PREMIUM LAYER. Subtle by design: short distances, soft easing, nothing loops fast. */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+h1,
+h2 {
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* Buttons: label rolls up on hover, a soft lift and a ring */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -14px color-mix(in srgb, var(--c-ink) 55%, transparent);
+}
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+.btn-roll {
+  display: inline-grid;
+  overflow: hidden;
+  line-height: 1.25;
+}
+.btn-roll > span {
+  grid-area: 1 / 1;
+  transition: transform 0.45s var(--ease-out);
+}
+.btn-roll > span + span {
+  transform: translateY(110%);
+}
+.btn:hover .btn-roll > span:first-child {
+  transform: translateY(-110%);
+}
+.btn:hover .btn-roll > span + span {
+  transform: translateY(0);
+}
+.btn-ghost:hover {
+  border-color: var(--c-ink);
+}
+
+/* Cards and photos: gentle lift and slow zoom */
+.lift {
+  transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out), border-color 0.3s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 40px -28px color-mix(in srgb, var(--c-ink) 60%, transparent);
+}
+.zoom img {
+  transition: transform 1.1s var(--ease-out);
+}
+.zoom:hover img {
+  transform: scale(1.045);
+}
+
+/* Link underline that draws in */
+.uline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.4s var(--ease-out);
+}
+.uline:hover {
+  background-size: 100% 1px;
+}
+
+/* Hero entrance: pure CSS, so it never waits on JavaScript. Text lines rise out of a mask. */
+@keyframes rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes settle {
+  from {
+    transform: scale(1.08);
+  }
+}
+@keyframes unveil {
+  from {
+    clip-path: inset(12% 8% 12% 8% round var(--r-media));
+  }
+}
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+.line-mask > span {
+  display: block;
+  animation: rise 1s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+}
+.enter {
+  animation: fade-up 0.9s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 250ms);
+}
+.unveil {
+  animation: unveil 1.3s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 120ms + 100ms);
+}
+.unveil img {
+  animation: settle 1.8s var(--ease-out) both;
+}
+
+/* Highlights marquee: slow, pauses on hover */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Gallery strip: swipeable on phones, pinned and scrubbed on desktop by the motion script */
+.strip {
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+.strip::-webkit-scrollbar {
+  display: none;
+}
+.strip > * {
+  scroll-snap-align: start;
+}
+html[data-pinned] .strip {
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+/* Statement line: words start faint and fill in as you scroll (motion script). */
+[data-words] .w {
+  transition: opacity 0.2s linear;
+}
+
+/* Header: solid after you scroll a little */
+.site-header {
+  transition: background-color 0.4s ease, border-color 0.4s ease, transform 0.45s var(--ease-out);
+}
+html[data-scrolled] .site-header {
+  border-color: var(--c-line);
+}
+html[data-hide-header] .site-header {
+  transform: translateY(-100%);
+}
+
+/* Price leaders on menus */
+.leader {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 1px dotted var(--c-line);
+  transform: translateY(-0.35em);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: auto;
+  }
+  .marquee [data-dup] {
+    display: none;
+  }
+  .line-mask > span,
+  .enter,
+  .unveil,
+  .unveil img {
+    animation: none !important;
+  }
+  .btn:hover,
+  .lift:hover,
+  .zoom:hover img {
+    transform: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optional brand motif (theme.pattern = "checker"): thin checkerboard bands, decorative only */
+.checker-y,
+.checker-top {
+  position: relative;
+  --chk: 9px;
+  --chk-bg: conic-gradient(var(--color-ink) 25%, var(--color-bg) 0 50%, var(--color-ink) 0 75%, var(--color-bg) 0) 0 0 / calc(var(--chk) * 2) calc(var(--chk) * 2);
+}
+.checker-y { padding-block: calc(1.25rem + var(--chk) * 2); }
+.checker-top { padding-top: calc(var(--chk) * 2); }
+.checker-y::before,
+.checker-y::after,
+.checker-top::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: calc(var(--chk) * 2);
+  background: var(--chk-bg);
+  pointer-events: none;
+}
+.checker-y::before,
+.checker-top::before { top: 0; }
+.checker-y::after { bottom: 0; }
