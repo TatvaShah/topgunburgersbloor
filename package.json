@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "og": "next build && node scripts/make-og.mjs",
-    "stock": "node scripts/stock-images.mjs"
+    "stock": "node scripts/stock-images.mjs",
+    "prebuild": "node scripts/optimize-images.mjs",
+    "predev": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "gsap": "3.15.0",
@@ -21,6 +23,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
